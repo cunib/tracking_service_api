@@ -10,7 +10,9 @@ defmodule TrackingServiceApi.Router do
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug :accepts, ["json", "json-api"]
+    plug JaSerializer.ContentTypeNegotiation
+    plug JaSerializer.Deserializer
   end
 
   scope "/", TrackingServiceApi do
@@ -20,7 +22,8 @@ defmodule TrackingServiceApi.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", TrackingServiceApi do
-  #   pipe_through :api
-  # end
+  scope "/api", TrackingServiceApi do
+    pipe_through :api
+    resources "/businesses", BusinessController, except: [:new, :edit]
+  end
 end
