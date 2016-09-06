@@ -38,5 +38,7 @@ defmodule TrackingServiceApi.Endpoint do
     key: "_tracking_service_api_key",
     signing_salt: "TOBk+a6+"
 
+  plug CORSPlug  
+
   plug TrackingServiceApi.Router
 end
