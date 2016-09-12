@@ -24,6 +24,10 @@ defmodule TrackingServiceApi.Router do
   # Other scopes may use custom stacks.
   scope "/api", TrackingServiceApi do
     pipe_through :api
-    resources "/businesses", BusinessController, except: [:new, :edit]
+    resources "/businesses", BusinessController, except: [:new, :edit] do
+      resources "/delivery_men", DeliveryManController, only: [:index]
+    end
+
+    resources "/delivery_men", DeliveryManController, except: [:new, :edit]
   end
 end

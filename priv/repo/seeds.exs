@@ -17,11 +17,26 @@ alias TrackingServiceApi.Business
     name: "La esquina",
     address: "Calle 6 y 66, La Plata"
   
-  },
-  %Business{
-    name: "Milonguita",
-    address: "Calle 44 num 532"
-  
   }
-
 ] |> Enum.each(&Repo.insert!(&1))
+
+ delivery_men = [
+   %{
+      username: "gago"
+   },
+   %{
+      username: "fabricio"
+   },
+   %{
+      username: "mariano"
+   },
+ ]
+
+Repo.transaction fn ->
+  Repo.all(Business) |> Enum.each(fn(business) ->
+    Enum.each(delivery_men, fn(delivery_man) ->
+      new_delivery_man = Ecto.build_assoc(business, :delivery_men, Map.put(delivery_man, :business_id, business.id))
+      Repo.insert!(new_delivery_man)
+    end)
+  end)
+end

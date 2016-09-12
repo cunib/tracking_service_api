@@ -4,6 +4,7 @@ defmodule TrackingServiceApi.Business do
   schema "businesses" do
     field :name, :string
     field :address, :string
+    has_many :delivery_men, TrackingServiceApi.DeliveryMan
 
     timestamps()
   end
