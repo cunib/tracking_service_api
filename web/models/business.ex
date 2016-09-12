@@ -5,6 +5,7 @@ defmodule TrackingServiceApi.Business do
     field :name, :string
     field :address, :string
     has_many :delivery_men, TrackingServiceApi.DeliveryMan
+    has_many :orders, TrackingServiceApi.Order
 
     timestamps()
   end
