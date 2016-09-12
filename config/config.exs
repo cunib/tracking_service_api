@@ -34,3 +34,6 @@ config :phoenix, :format_encoders,
   "application/vnd.api+json" => ["json-api"]
 
   }
+# Config ja_serializer gem to underscore keys
+config :ja_serializer,
+  key_format: :underscored
