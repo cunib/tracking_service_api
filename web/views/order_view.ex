@@ -8,4 +8,8 @@ defmodule TrackingServiceApi.OrderView do
     field: :business_id,
     type: "business"
 
+  has_one :delivery,
+    field: :delivery_id,
+    type: "delivery"
+
 end

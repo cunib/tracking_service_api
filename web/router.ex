@@ -27,8 +27,10 @@ defmodule TrackingServiceApi.Router do
     resources "/businesses", BusinessController, except: [:new, :edit] do
       resources "/delivery_men", DeliveryManController, only: [:index]
       resources "/orders", OrderController, only: [:index]
+      resources "/deliveries", DeliveryController, only: [:index]
     end
-
+    
+    resources "/deliveries", DeliveryController, except: [:new, :edit]
     resources "/orders", OrderController, except: [:new, :edit]
     resources "/delivery_men", DeliveryManController, except: [:new, :edit]
   end

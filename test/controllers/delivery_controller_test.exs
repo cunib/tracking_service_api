@@ -1,10 +1,10 @@
-defmodule TrackingServiceApi.DeliveryManControllerTest do
+defmodule TrackingServiceApi.DeliveryControllerTest do
   use TrackingServiceApi.ConnCase
 
-  alias TrackingServiceApi.DeliveryMan
+  alias TrackingServiceApi.Delivery
   alias TrackingServiceApi.Repo
 
-  @valid_attrs %{username: "some content"}
+  @valid_attrs %{finish_date: %{day: 17, hour: 14, min: 0, month: 4, sec: 0, year: 2010}, start_date: %{day: 17, hour: 14, min: 0, month: 4, sec: 0, year: 2010}}
   @invalid_attrs %{}
 
   setup do
@@ -16,58 +16,59 @@ defmodule TrackingServiceApi.DeliveryManControllerTest do
   end
   
   defp relationships do 
-    business = Repo.insert!(%TrackingServiceApi.Business{})
+    delivery_man = Repo.insert!(%TrackingServiceApi.DeliveryMan{})
 
     %{
-      "business" => %{
+      "delivery_man" => %{
         "data" => %{
-          "type" => "business",
-          "id" => business.id
+          "type" => "delivery_man",
+          "id" => delivery_man.id
         }
       },
     }
   end
 
   test "lists all entries on index", %{conn: conn} do
-    conn = get conn, delivery_man_path(conn, :index)
+    conn = get conn, delivery_path(conn, :index)
     assert json_response(conn, 200)["data"] == []
   end
 
   test "shows chosen resource", %{conn: conn} do
-    delivery_man = Repo.insert! %DeliveryMan{}
-    conn = get conn, delivery_man_path(conn, :show, delivery_man)
+    delivery = Repo.insert! %Delivery{}
+    conn = get conn, delivery_path(conn, :show, delivery)
     data = json_response(conn, 200)["data"]
-    assert data["id"] == "#{delivery_man.id}"
-    assert data["type"] == "delivery-man"
-    assert data["attributes"]["username"] == delivery_man.username
-    assert data["attributes"]["business_id"] == delivery_man.business_id
+    assert data["id"] == "#{delivery.id}"
+    assert data["type"] == "delivery"
+    assert data["attributes"]["start_date"] == delivery.start_date
+    assert data["attributes"]["finish_date"] == delivery.finish_date
+    assert data["attributes"]["delivery_man_id"] == delivery.delivery_man_id
   end
 
   test "does not show resource and instead throw error when id is nonexistent", %{conn: conn} do
     assert_error_sent 404, fn ->
-      get conn, delivery_man_path(conn, :show, -1)
+      get conn, delivery_path(conn, :show, -1)
     end
   end
 
   test "creates and renders resource when data is valid", %{conn: conn} do
-    conn = post conn, delivery_man_path(conn, :create), %{
+    conn = post conn, delivery_path(conn, :create), %{
       "meta" => %{},
       "data" => %{
-        "type" => "delivery_man",
+        "type" => "delivery",
         "attributes" => @valid_attrs,
         "relationships" => relationships
       }
     }
 
     assert json_response(conn, 201)["data"]["id"]
-    assert Repo.get_by(DeliveryMan, @valid_attrs)
+    assert Repo.get_by(Delivery, @valid_attrs)
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do
-    conn = post conn, delivery_man_path(conn, :create), %{
+    conn = post conn, delivery_path(conn, :create), %{
       "meta" => %{},
       "data" => %{
-        "type" => "delivery_man",
+        "type" => "delivery",
         "attributes" => @invalid_attrs,
         "relationships" => relationships
       }
@@ -77,28 +78,28 @@ defmodule TrackingServiceApi.DeliveryManControllerTest do
   end
 
   test "updates and renders chosen resource when data is valid", %{conn: conn} do
-    delivery_man = Repo.insert! %DeliveryMan{}
-    conn = put conn, delivery_man_path(conn, :update, delivery_man), %{
+    delivery = Repo.insert! %Delivery{}
+    conn = put conn, delivery_path(conn, :update, delivery), %{
       "meta" => %{},
       "data" => %{
-        "type" => "delivery_man",
-        "id" => delivery_man.id,
+        "type" => "delivery",
+        "id" => delivery.id,
         "attributes" => @valid_attrs,
         "relationships" => relationships
       }
     }
 
     assert json_response(conn, 200)["data"]["id"]
-    assert Repo.get_by(DeliveryMan, @valid_attrs)
+    assert Repo.get_by(Delivery, @valid_attrs)
   end
 
   test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do
-    delivery_man = Repo.insert! %DeliveryMan{}
-    conn = put conn, delivery_man_path(conn, :update, delivery_man), %{
+    delivery = Repo.insert! %Delivery{}
+    conn = put conn, delivery_path(conn, :update, delivery), %{
       "meta" => %{},
       "data" => %{
-        "type" => "delivery_man",
-        "id" => delivery_man.id,
+        "type" => "delivery",
+        "id" => delivery.id,
         "attributes" => @invalid_attrs,
         "relationships" => relationships
       }
@@ -108,10 +109,10 @@ defmodule TrackingServiceApi.DeliveryManControllerTest do
   end
 
   test "deletes chosen resource", %{conn: conn} do
-    delivery_man = Repo.insert! %DeliveryMan{}
-    conn = delete conn, delivery_man_path(conn, :delete, delivery_man)
+    delivery = Repo.insert! %Delivery{}
+    conn = delete conn, delivery_path(conn, :delete, delivery)
     assert response(conn, 204)
-    refute Repo.get(DeliveryMan, delivery_man.id)
+    refute Repo.get(Delivery, delivery.id)
   end
 
 end

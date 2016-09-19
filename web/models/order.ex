@@ -6,6 +6,7 @@ defmodule TrackingServiceApi.Order do
     field :finish_date, Ecto.DateTime
     field :address, :string
     belongs_to :business, TrackingServiceApi.Business
+    has_many :deliveries, TrackingServiceApi.Delivery
 
     timestamps()
   end
